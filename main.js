@@ -157,6 +157,5 @@ answerButton.onclick = async () => {
 //hangUp the call then reload page to create a new call.
 hangupButton.onclick = async () => {
   pc.close();
-  remoteVideo.srcObject = null;
   location.reload();
 }

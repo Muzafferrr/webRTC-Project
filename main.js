@@ -49,6 +49,7 @@ const hangupButton = document.getElementById('hangupButton');
 //we get all tracks and push tracks to peer connection from local.
 //we create remoteStream object as null MediaStream object.
 //then we pull tracks from remote stream, add to video stream
+
 webcamButton.onclick = async () => {
   navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(localStream => {
     localStream.getTracks().forEach((track) => {
@@ -67,8 +68,8 @@ webcamButton.onclick = async () => {
   webcamButton.disabled = true;
 };
 
-// this function create call.
-// we create a reference to firestore collections for signaling.
+//this function create call.
+//we create a reference to firestore collections for signaling.
 
 callButton.onclick = async () => {
   const callDoc = firestore.collection('calls').doc();
@@ -77,12 +78,12 @@ callButton.onclick = async () => {
 
   callInput.value = callDoc.id;
 
-// we get the caller information and save it into firestore database.
+//we get the caller information and save it into firestore database.
   pc.onicecandidate = (event) => {
     event.candidate && offerCandidates.add(event.candidate.toJSON());
   };
 
-  // create offer
+//and we create an input to connect remote person.
   const offerDescription = await pc.createOffer();
   await pc.setLocalDescription(offerDescription);
 
@@ -93,7 +94,7 @@ callButton.onclick = async () => {
 
   await callDoc.set({ offer });
 
-  // listen for remote answer
+  //listen for remote answer
   callDoc.onSnapshot((snapshot) => {
     const data = snapshot.data();
     if (!pc.currentRemoteDescription && data?.answer) {
@@ -102,7 +103,7 @@ callButton.onclick = async () => {
     }
   });
 
-  // when answered, add candidate to peer connection
+  //when answered, add candidate to peer connection
   answerCandidates.onSnapshot((snapshot) => {
     snapshot.docChanges().forEach((change) => {
       if (change.type === 'added') {
@@ -115,7 +116,8 @@ callButton.onclick = async () => {
   hangupButton.disabled = false;
 };
 
-// 3. Answer the call with the unique ID
+//answer the call with the unique ID
+
 answerButton.onclick = async () => {
   const callId = callInput.value;
   const callDoc = firestore.collection('calls').doc(callId);
@@ -152,6 +154,7 @@ answerButton.onclick = async () => {
   });
 };
 
+//hangUp the call then reload page to create a new call.
 hangupButton.onclick = async () => {
   pc.close();
   remoteVideo.srcObject = null;

@@ -150,3 +150,7 @@ answerButton.onclick = async () => {
     });
   });
 };
+
+hangupButton.onclick = async () => {
+  alert("Kapatma butonuna tıklandı.");
+}

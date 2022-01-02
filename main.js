@@ -5,6 +5,13 @@ import 'firebase/firestore';
 
 const firebaseConfig = {
   // your config
+  apiKey: "AIzaSyAD2F6e_8ID7DA-ea1anWOZ1Q1Otvywsok",
+    authDomain: "webrtcproject-25b8f.firebaseapp.com",
+    databaseURL: "https://webrtcproject-25b8f-default-rtdb.firebaseio.com",
+    projectId: "webrtcproject-25b8f",
+    storageBucket: "webrtcproject-25b8f.appspot.com",
+    messagingSenderId: "349621738725",
+    appId: "1:349621738725:web:5d3018df92cddfbeae880c"
 };
 
 if (!firebase.apps.length) {

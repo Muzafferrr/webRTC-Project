@@ -1,13 +1,13 @@
-import './style.css';          //import general css file
+import './style.css';
 
-import firebase from 'firebase/app';       //install firebase then import firebase and firestore
-import 'firebase/firestore';               //for signal server.
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
 
 const firebaseConfig = {
   apiKey: "AIzaSyAD2F6e_8ID7DA-ea1anWOZ1Q1Otvywsok",
-  authDomain: "webrtcproject-25b8f.firebaseapp.com",                            
-  databaseURL: "https://webrtcproject-25b8f-default-rtdb.firebaseio.com",       
+  authDomain: "webrtcproject-25b8f.firebaseapp.com",
+  databaseURL: "https://webrtcproject-25b8f-default-rtdb.firebaseio.com",
   projectId: "webrtcproject-25b8f",
   storageBucket: "webrtcproject-25b8f.appspot.com",
   messagingSenderId: "349621738725",
@@ -21,22 +21,23 @@ const firestore = firebase.firestore();
 
 const servers = {
   iceServers: [
-    {                                                                               //these are Google Talk and 
-      urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],     //Google-hosted VOIP services.
+    {
+      urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
     },
   ],
   iceCandidatePoolSize: 10,
 };
 
-const pc = new RTCPeerConnection(servers);        //pc is a connection between remote stream device and 
-let localStream = null;                           //local stream device
+const pc = new RTCPeerConnection(servers);
+let localStream = null;
 let remoteStream = null;
 
+// HTML elements
 const webcamButton = document.getElementById('webcamButton');
 const webcamVideo = document.getElementById('webcamVideo');
 const callButton = document.getElementById('callButton');
-const callInput = document.getElementById('callInput');               //We take the elements that we  
-const answerButton = document.getElementById('answerButton');         //will use around of the project.
+const callInput = document.getElementById('callInput');
+const answerButton = document.getElementById('answerButton');
 const remoteVideo = document.getElementById('remoteVideo');
 const hangupButton = document.getElementById('hangupButton');
 

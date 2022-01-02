@@ -1,17 +1,7 @@
-# Video Chat with WebRTC and Firebase 
-
-Build a 1-to-1 video chat feature with WebRTC, Firestore, and JavaScript. 
-
-Watch the [WebRTC Explanation on YouTube](https://youtu.be/WmR9IMUD_CY) and follow the full [WebRTC Firebase Tutorial](https://fireship.io/lessons/webrtc-firebase-video-chat) on Fireship.io. 
-
+Build a peer to peer video chat with WebRTC, Firestore, and JavaScript. 
 
 ## Usage
 
-Update the firebase project config in the main.js file. 
+https://webrtc-project.netlify.app/
 
-```
-git clone <this-repo>
-npm install
-
-npm run dev
-```
+Go to the link then start your webcam and create a call. Copt call id and send your call id to your peer. Peer should start webcam then paste id to input and press answer button to join your call. If you want to hangup the call, please press hangup button.

@@ -1,9 +1,10 @@
+//import general css file and install&import firebase.
 import './style.css';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 
-
+//this is our firestore database config create your firestore database then copy/paste your config here.
 const firebaseConfig = {
   apiKey: "AIzaSyAD2F6e_8ID7DA-ea1anWOZ1Q1Otvywsok",
   authDomain: "webrtcproject-25b8f.firebaseapp.com",
@@ -19,6 +20,7 @@ if (!firebase.apps.length) {
 }
 const firestore = firebase.firestore();
 
+//these are google real time chat and talk servers. we use them for RTCPeerConnection.
 const servers = {
   iceServers: [
     {
@@ -28,11 +30,12 @@ const servers = {
   iceCandidatePoolSize: 10,
 };
 
+//RTCPeerConnection creates connection between remote and local device.
 const pc = new RTCPeerConnection(servers);
 let localStream = null;
 let remoteStream = null;
 
-// HTML elements
+// these elements are using around of the project.
 const webcamButton = document.getElementById('webcamButton');
 const webcamVideo = document.getElementById('webcamVideo');
 const callButton = document.getElementById('callButton');
@@ -41,47 +44,45 @@ const answerButton = document.getElementById('answerButton');
 const remoteVideo = document.getElementById('remoteVideo');
 const hangupButton = document.getElementById('hangupButton');
 
-// 1. Setup media sources
-
+//navigator object is using for getting browser information.
+//we get user media as video=true & audio =true. then we create localStream video object and this is our video.
+//we get all tracks and push tracks to peer connection from local.
+//we create remoteStream object as null MediaStream object.
+//then we pull tracks from remote stream, add to video stream
 webcamButton.onclick = async () => {
-  localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-  remoteStream = new MediaStream();
-
-  // Push tracks from local stream to peer connection
-  localStream.getTracks().forEach((track) => {
-    pc.addTrack(track, localStream);
-  });
-
-  // Pull tracks from remote stream, add to video stream
-  pc.ontrack = (event) => {
-    event.streams[0].getTracks().forEach((track) => {
-      remoteStream.addTrack(track);
+  navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(localStream => {
+    localStream.getTracks().forEach((track) => {
+      pc.addTrack(track, localStream);
     });
+    webcamVideo.srcObject = localStream;
+  });
+  
+  remoteStream = new MediaStream();
+  pc.ontrack = (event) => {
+    remoteVideo.srcObject = event.streams[0];
   };
-
-  webcamVideo.srcObject = localStream;
-  remoteVideo.srcObject = remoteStream;
 
   callButton.disabled = false;
   answerButton.disabled = false;
   webcamButton.disabled = true;
 };
 
-// 2. Create an offer
+// this function create call.
+// we create a reference to firestore collections for signaling.
+
 callButton.onclick = async () => {
-  // Reference Firestore collections for signaling
   const callDoc = firestore.collection('calls').doc();
   const offerCandidates = callDoc.collection('offerCandidates');
   const answerCandidates = callDoc.collection('answerCandidates');
 
   callInput.value = callDoc.id;
 
-  // Get candidates for caller, save to db
+// we get the caller information and save it into firestore database.
   pc.onicecandidate = (event) => {
     event.candidate && offerCandidates.add(event.candidate.toJSON());
   };
 
-  // Create offer
+  // create offer
   const offerDescription = await pc.createOffer();
   await pc.setLocalDescription(offerDescription);
 
@@ -92,7 +93,7 @@ callButton.onclick = async () => {
 
   await callDoc.set({ offer });
 
-  // Listen for remote answer
+  // listen for remote answer
   callDoc.onSnapshot((snapshot) => {
     const data = snapshot.data();
     if (!pc.currentRemoteDescription && data?.answer) {
@@ -101,7 +102,7 @@ callButton.onclick = async () => {
     }
   });
 
-  // When answered, add candidate to peer connection
+  // when answered, add candidate to peer connection
   answerCandidates.onSnapshot((snapshot) => {
     snapshot.docChanges().forEach((change) => {
       if (change.type === 'added') {
@@ -154,4 +155,5 @@ answerButton.onclick = async () => {
 hangupButton.onclick = async () => {
   pc.close();
   remoteVideo.srcObject = null;
+  location.reload();
 }

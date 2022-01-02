@@ -6,8 +6,8 @@ import 'firebase/firestore';               //for signal server.
 
 const firebaseConfig = {
   apiKey: "AIzaSyAD2F6e_8ID7DA-ea1anWOZ1Q1Otvywsok",
-  authDomain: "webrtcproject-25b8f.firebaseapp.com",                            //create firestore database and 
-  databaseURL: "https://webrtcproject-25b8f-default-rtdb.firebaseio.com",       //implement your config into code.
+  authDomain: "webrtcproject-25b8f.firebaseapp.com",                            
+  databaseURL: "https://webrtcproject-25b8f-default-rtdb.firebaseio.com",       
   projectId: "webrtcproject-25b8f",
   storageBucket: "webrtcproject-25b8f.appspot.com",
   messagingSenderId: "349621738725",
